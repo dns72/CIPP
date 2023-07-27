@@ -17,6 +17,8 @@ import {
   faBus,
   faExclamationTriangle,
   faUserShield,
+  faEnvelope,
+  faToolbox,
 } from '@fortawesome/free-solid-svg-icons'
 
 const _nav = [
@@ -89,8 +91,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Basic Auth Report',
-        to: '/identity/reports/basic-auth-report',
+        name: 'Inactive Users',
+        to: '/identity/reports/inactive-users-report',
       },
       {
         component: CNavItem,
@@ -125,20 +127,24 @@ const _nav = [
         name: 'Alerts Wizard',
         to: '/tenant/administration/alertswizard',
       },
-
       {
         component: CNavItem,
         name: 'Scheduled Alerts',
         to: '/tenant/administration/alertsqueue',
       },
+      {
+        component: CNavItem,
+        name: 'Enterprise Applications',
+        to: '/tenant/administration/enterprise-apps',
+      },
     ],
   },
   {
     component: CNavGroup,
-    name: 'Reports',
-    section: 'Reports',
-    to: '/tenant/reports',
-    icon: <FontAwesomeIcon icon={faChartBar} className="nav-icon" />,
+    name: 'Tools',
+    section: 'Tools',
+    to: '/tenant/administration',
+    icon: <FontAwesomeIcon icon={faToolbox} className="nav-icon" />,
     items: [
       {
         component: CNavItem,
@@ -147,18 +153,18 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Licence Report',
-        to: '/tenant/administration/list-licenses',
+        name: 'Application Approval',
+        to: '/tenant/administration/appapproval',
       },
       {
         component: CNavItem,
-        name: 'Consented Applications',
-        to: '/tenant/administration/application-consent',
+        name: 'Tenant Lookup',
+        to: '/tenant/administration/tenantlookup',
       },
       {
         component: CNavItem,
-        name: 'Service Health',
-        to: '/tenant/administration/service-health',
+        name: 'Individual Domain Check',
+        to: '/tenant/standards/individual-domains',
       },
     ],
   },
@@ -176,7 +182,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Apply Standards',
+        name: 'Standards Wizard',
         to: '/tenant/standards/apply-standard',
       },
       {
@@ -188,11 +194,6 @@ const _nav = [
         component: CNavItem,
         name: 'Domains Analyser',
         to: '/tenant/standards/domains-analyser',
-      },
-      {
-        component: CNavItem,
-        name: 'Individual Domain Check',
-        to: '/tenant/standards/individual-domains',
       },
     ],
   },
@@ -232,6 +233,30 @@ const _nav = [
         component: CNavItem,
         name: 'Templates',
         to: '/tenant/conditional/list-template',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Reports',
+    section: 'Reports',
+    to: '/tenant/reports',
+    icon: <FontAwesomeIcon icon={faChartBar} className="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Licence Report',
+        to: '/tenant/administration/list-licenses',
+      },
+      {
+        component: CNavItem,
+        name: 'Consented Applications',
+        to: '/tenant/administration/application-consent',
+      },
+      {
+        component: CNavItem,
+        name: 'Service Health',
+        to: '/tenant/administration/service-health',
       },
     ],
   },
@@ -333,7 +358,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Add WinGet or Store App',
+        name: 'Add Store App',
         to: '/endpoint/applications/add-winget-app',
       },
       {
@@ -441,14 +466,14 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: 'Sharepoint',
+    name: 'SharePoint',
     section: 'Teams & Sharepoint',
     to: '/teams-share/sharepoint',
     icon: <FontAwesomeIcon icon={faLink} className="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Sharepoint',
+        name: 'SharePoint',
         to: '/teams-share/sharepoint/list-sharepoint',
       },
     ],
@@ -517,7 +542,7 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: 'Transport Rules',
+    name: 'Transport',
     section: 'Transport Rules',
     to: '/tenant/administration',
     icon: <FontAwesomeIcon icon={faBus} className="nav-icon" />,
@@ -556,6 +581,30 @@ const _nav = [
   },
   {
     component: CNavGroup,
+    name: 'Spamfilter',
+    section: 'Spamfilter',
+    to: '/tenant/administration',
+    icon: <FontAwesomeIcon icon={faEnvelope} className="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Spamfilter',
+        to: '/email/spamfilter/list-spamfilter',
+      },
+      {
+        component: CNavItem,
+        name: 'Apply Spamfilter Template',
+        to: '/email/spamfilter/deploy',
+      },
+      {
+        component: CNavItem,
+        name: 'Templates',
+        to: '/email/spamfilter/list-templates',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
     name: 'Reports',
     section: 'Email & Exchange',
     to: '/email/reports',
@@ -580,6 +629,11 @@ const _nav = [
         component: CNavItem,
         name: 'Phishing Policies',
         to: '/email/reports/phishing-policies',
+      },
+      {
+        component: CNavItem,
+        name: 'Shared Mailbox with Enabled Account',
+        to: '/email/reports/SharedMailboxEnabledAccount',
       },
     ],
   },
@@ -621,6 +675,16 @@ const _nav = [
     items: [
       {
         component: CNavItem,
+        name: 'Role Wizard',
+        to: '/tenant/administration/gdap-role-wizard',
+      },
+      {
+        component: CNavItem,
+        name: 'GDAP Roles',
+        to: '/tenant/administration/gdap-roles',
+      },
+      {
+        component: CNavItem,
         name: 'Migration Wizard',
         to: '/tenant/administration/gdap',
       },
@@ -631,8 +695,13 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Application Approval',
-        to: '/tenant/administration/appapproval',
+        name: 'Invite Wizard',
+        to: '/tenant/administration/gdap-invite',
+      },
+      {
+        component: CNavItem,
+        name: 'GDAP Relationships',
+        to: '/tenant/administration/gdap-relationships',
       },
       {
         component: CNavItem,
