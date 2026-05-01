@@ -1,14 +1,13 @@
-import { useSettings } from "../../hooks/use-settings";
-
 export const utilTableMode = (
   columnVisibility,
   mode,
   actions,
   simpleColumns,
   offCanvas,
-  onChange
+  onChange,
+  maxHeightOffset = '380px',
+  settings = {}
 ) => {
-  const settings = useSettings();
   if (mode === true) {
     return {
       enableRowSelection: false,
@@ -20,12 +19,12 @@ export const utilTableMode = (
         rowsPerPageOptions: [25, 50, 100, 250, 500],
       },
       muiTableContainerProps: {
-        sx: { maxHeight: `calc(100vh - 380px)` },
+        sx: { maxHeight: `calc(100vh - ${maxHeightOffset})` },
       },
       initialState: {
         columnOrder: [...simpleColumns],
         columnVisibility: { ...columnVisibility },
-        density: "compact",
+        density: 'compact',
         pagination: {
           pageSize: settings?.tablePageSize?.value
             ? parseInt(settings?.tablePageSize?.value, 10)
@@ -34,14 +33,14 @@ export const utilTableMode = (
         },
       },
       displayColumnDefOptions: {
-        "mrt-row-actions": {
+        'mrt-row-actions': {
           visibleInShowHideMenu: false,
         },
-        "mrt-row-select": {
+        'mrt-row-select': {
           visibleInShowHideMenu: false,
         },
       },
-    };
+    }
   } else {
     return {
       enableRowSelection: actions || onChange ? true : false,
@@ -50,20 +49,19 @@ export const utilTableMode = (
       enableFacetedValues: true,
       enableColumnFilterModes: true,
       enableStickyHeader: true,
-      selectAllMode: "all",
+      selectAllMode: 'all',
       enableColumnPinning: true,
-      enableStickyHeader: true,
       muiPaginationProps: {
         rowsPerPageOptions: [25, 50, 100, 250, 500],
       },
       muiTableContainerProps: {
-        sx: { maxHeight: `calc(100vh - 380px)` },
+        sx: { maxHeight: `calc(100vh - ${maxHeightOffset})` },
       },
       displayColumnDefOptions: {
-        "mrt-row-actions": {
+        'mrt-row-actions': {
           visibleInShowHideMenu: false,
         },
-        "mrt-row-select": {
+        'mrt-row-select': {
           visibleInShowHideMenu: false,
         },
       },
@@ -71,7 +69,7 @@ export const utilTableMode = (
         columnOrder: [...simpleColumns],
         columnVisibility: { ...columnVisibility },
         showGlobalFilter: true,
-        density: "compact",
+        density: 'compact',
         pagination: {
           pageSize: settings?.tablePageSize?.value
             ? parseInt(settings?.tablePageSize?.value, 10)
@@ -79,10 +77,10 @@ export const utilTableMode = (
           pageIndex: 0,
         },
         columnPinning: {
-          left: ["mrt-row-select"],
-          right: ["mrt-row-actions"],
+          left: ['mrt-row-select'],
+          right: ['mrt-row-actions'],
         },
       },
-    };
+    }
   }
-};
+}

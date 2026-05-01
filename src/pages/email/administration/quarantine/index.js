@@ -1,22 +1,31 @@
-import { Layout as DashboardLayout } from "/src/layouts/index.js";
-import { CippTablePage } from "/src/components/CippComponents/CippTablePage.jsx";
+import { Layout as DashboardLayout } from "../../../../layouts/index.js";
+import { CippTablePage } from "../../../../components/CippComponents/CippTablePage.jsx";
 import { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, IconButton, Skeleton, Typography, CircularProgress } from "@mui/material";
-import { Block, Close, Done, DoneAll, Subject } from "@mui/icons-material";
-import { CippMessageViewer } from "/src/components/CippComponents/CippMessageViewer.jsx";
-import { ApiGetCall, ApiPostCall } from "/src/api/ApiCall";
-import { useSettings } from "/src/hooks/use-settings";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Skeleton,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import { Block, Close, Done, DoneAll } from "@mui/icons-material";
+import { CippMessageViewer } from "../../../../components/CippComponents/CippMessageViewer.jsx";
+import { ApiGetCall, ApiPostCall } from "../../../../api/ApiCall";
+import { useSettings } from "../../../../hooks/use-settings";
 import { EyeIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-import { CippDataTable } from "/src/components/CippTable/CippDataTable";
+import { CippDataTable } from "../../../../components/CippTable/CippDataTable";
 
 const simpleColumns = [
-  "SenderAddress",
-  "RecipientAddress",
-  "Subject",
-  "Type",
   "ReceivedTime",
   "ReleaseStatus",
+  "Subject",
+  "SenderAddress",
+  "RecipientAddress",
+  "Type",
   "PolicyName",
+  "Tenant",
 ];
 const detailColumns = ["Received", "Status", "SenderAddress", "RecipientAddress"];
 const pageTitle = "Quarantine Management";
@@ -30,6 +39,7 @@ const Page = () => {
   const [traceDetails, setTraceDetails] = useState([]);
   const [traceMessageId, setTraceMessageId] = useState(null);
   const [messageSubject, setMessageSubject] = useState(null);
+  const [messageContentsWaiting, setMessageContentsWaiting] = useState(false);
 
   const getMessageContents = ApiGetCall({
     url: "/api/ListMailQuarantineMessage",
@@ -37,7 +47,7 @@ const Page = () => {
       tenantFilter: tenantFilter,
       Identity: messageId,
     },
-    waiting: false,
+    waiting: messageContentsWaiting,
     queryKey: `ListMailQuarantineMessage-${messageId}`,
   });
 
@@ -52,7 +62,9 @@ const Page = () => {
   const viewMessage = (row) => {
     const id = row.Identity;
     setMessageId(id);
-    getMessageContents.waiting = true;
+    if (!messageContentsWaiting) {
+      setMessageContentsWaiting(true);
+    }
     getMessageContents.refetch();
     setDialogOpen(true);
   };
@@ -76,7 +88,7 @@ const Page = () => {
     } else {
       setDialogContent(<Skeleton variant="rectangular" height={400} />);
     }
-  }, [getMessageContents.isSuccess]);
+  }, [getMessageContents.isSuccess, getMessageContents.data]);
 
   const actions = [
     {
@@ -95,9 +107,10 @@ const Page = () => {
       label: "Release",
       type: "POST",
       url: "/api/ExecQuarantineManagement",
+      multiPost: true,
       data: {
         Identity: "Identity",
-        Type: "Release",
+        Type: "!Release",
       },
       confirmText: "Are you sure you want to release this message?",
       icon: <Done />,
@@ -109,11 +122,11 @@ const Page = () => {
       url: "/api/ExecQuarantineManagement",
       data: {
         Identity: "Identity",
-        Type: "Deny",
+        Type: "!Deny",
       },
       confirmText: "Are you sure you want to deny this message?",
       icon: <Block />,
-      condition: (row) => row.ReleaseStatus !== "DENIED",
+      condition: (row) => row.ReleaseStatus === "REQUESTED",
     },
     {
       label: "Release & Allow Sender",
@@ -121,8 +134,10 @@ const Page = () => {
       url: "/api/ExecQuarantineManagement",
       data: {
         Identity: "Identity",
-        Type: "Release",
+        Type: "!Release",
         AllowSender: true,
+        SenderAddress: "SenderAddress",
+        PolicyName: "PolicyName",
       },
       confirmText:
         "Are you sure you want to release this email and add the sender to the whitelist?",
@@ -141,11 +156,19 @@ const Page = () => {
       filterName: "Not Released",
       value: [{ id: "ReleaseStatus", value: "NOTRELEASED" }],
       type: "column",
+      filterType: "equal",
     },
     {
       filterName: "Released",
       value: [{ id: "ReleaseStatus", value: "RELEASED" }],
       type: "column",
+      filterType: "equal",
+    },
+    {
+      filterName: "Requested",
+      value: [{ id: "ReleaseStatus", value: "REQUESTED" }],
+      type: "column",
+      filterType: "equal",
     },
   ];
 
@@ -154,6 +177,7 @@ const Page = () => {
       <CippTablePage
         title={pageTitle}
         apiUrl="/api/ListMailQuarantine"
+        apiDataKey="Results"
         actions={actions}
         offCanvas={offCanvas}
         simpleColumns={simpleColumns}
